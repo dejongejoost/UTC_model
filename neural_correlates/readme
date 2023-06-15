@@ -1,0 +1,7 @@
+The raw simulation data for Wang et al. (2018) and Gouvea et al. (2015) were too large to upload on Github. 
+You can download them through the follow link:
+wang_2018_LIF: https://doi.org/10.6084/m9.figshare.23450642
+gouvea_2015_LIF: https://doi.org/10.6084/m9.figshare.23522469
+
+Place all .tex files in their respective subfolders (i.e., 'wang_2018_LIF' and 'gouvea_2015_LIF') and
+you'll be able to load in the raw data (note: this takes some time). 
