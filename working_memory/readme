@@ -1,0 +1,6 @@
+The raw simulation data for Polti et al. (2018) were too large to upload on Github. 
+You can download them through the follow link:
+polti_etal_2018: https://doi.org/10.6084/m9.figshare.23450240
+
+Place all .tex files in its respective subfolder (i.e., 'polti_etal_2018') and
+you'll be able to load in the raw data (note: this takes some time). 
