@@ -1,0 +1,24 @@
+seed = 19711
+backend = 'nengo'
+dt = 0.001
+neuron_type = 'default'
+n_type = 'Direct()'
+N = 200
+min_max_rate = 20
+max_max_rate = 50
+tau = 0.1
+tau_control = 0.005
+dimensions = 1
+base_theta = 1.0
+effective_theta = 0.3535533905932738
+within_gain_noise_std = 0.0
+between_gain_noise_std = 0.0
+input_noise_std = 0.4
+task_type = 'prospective_sensory'
+full_output = False
+trial_duration = 0.3535533905932738
+prestim = 0.0
+
+rt = None
+estimate = 0.6226768489831396
+control = 2.82842712474619
