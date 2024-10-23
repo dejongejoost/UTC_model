@@ -42,6 +42,7 @@ class UTC_prospective(pytry.NengoTrial):
         self.param('trial duration', trial_duration=2.0)
         self.param('pre-stimulus interval', prestim = 0.5)
         self.param('post-stimulus interval', poststim = 0.5)
+        self.param('identifier, based on external variable', ID=[])
 
     # define the model
     def model(self, p):
@@ -61,7 +62,17 @@ class UTC_prospective(pytry.NengoTrial):
             # ---------------
             # Timing parameters
             # ---------------
-            p.thresholds = np.array([0.63155054, 0.59954345, 0.58178892, 0.57019859, 0.56189282, 0.55558088])
+            p.thresholds = np.array([0.6300808623771766,
+                                         0.8821421244327992,
+                                         0.9290490234086494,
+                                         0.9488498184225395,
+                                         0.9597731531689495,
+                                         0.9666894084290538,
+                                         0.9714564357340751,
+                                         0.9749375194262087,
+                                         0.9775884384595903,
+                                         0.9796725204243686])
+            p.threshold = p.thresholds[p.dimensions-1]
             
             # Set control (effective_theta = base_theta/c)
             if p.between_gain_noise_std != 0.:
@@ -78,7 +89,8 @@ class UTC_prospective(pytry.NengoTrial):
                 return np.random.normal(p.c, p.within_gain_noise_std, 1)
             
             control = nengo.Node(output=control_function)
-            gain = nengo.Ensemble(n_neurons=128*p.dimensions, dimensions=1, radius=2)
+            gain = nengo.Ensemble(n_neurons=128*p.dimensions, dimensions=1, radius=2,
+                                 neuron_type=nengo.Direct())
             
             # Set input (step input, perturbed by noise)
             def stimulus_function(t):
@@ -133,6 +145,8 @@ class UTC_prospective(pytry.NengoTrial):
                 max_rates = nengo.dists.Uniform(p.min_max_rate, p.max_max_rate),
                 #encoders=nengo.dists.Choice(np.eye(dimensions)),
                 radius=1.5)
+                #noise=nengo.processes.WhiteNoise(
+                    #dist=nengo.dists.Gaussian(mean=0, std=0.001), seed=p.seed))
             
             r = nengo.Node(size_in=1)
             
@@ -141,7 +155,7 @@ class UTC_prospective(pytry.NengoTrial):
             nengo.Connection(x, mx, synapse=None, solver=solver)
             nengo.Connection(gain, mg, synapse=p.tau_control)
             nengo.Connection(mechanism, x, synapse=p.tau) 
-            nengo.Connection(x, r, function=readout)
+            nengo.Connection(x, r, function=readout, synapse=None)
 
             # -------------
             # Model outputs
@@ -171,8 +185,8 @@ class UTC_prospective(pytry.NengoTrial):
          
         # Determine estimate for sensory timing, rt for motor timing
         if str(p.n_type) == 'Direct()': # if Direct mode, don't filter
-            readout = np.array(sim.data[self.p_r])
-            estimate = np.array(sim.data[self.p_r])[-1]
+            readout = np.array(sim.data[self.p_x][:,0])
+            estimate = np.array(sim.data[self.p_x][:,0])[-1]
             rt = np.argwhere(readout > p.thresholds[p.dimensions-1])
             if rt.size != 0:
                 rt = rt[0][0]
@@ -206,8 +220,8 @@ class UTC_prospective(pytry.NengoTrial):
                         readout = np.array(sim.data[self.p_r]),
                         control = p.c,
                         rt = rt,
-                        estimate=estimate[0])
+                        estimate=estimate)
         else:
             return dict(rt = rt,
-                        estimate = estimate[0],
+                        estimate = estimate,
                         control = p.c)
